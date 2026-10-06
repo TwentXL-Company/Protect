@@ -12,33 +12,30 @@ namespace PasswordManager.Helper
 {
     public class KeysSettings : IKeysSettings
     {
-        public void SaveKeys(string keysFile)
+        public void SaveIV(string filePathIV)
         {
             List<byte[]> keysList = new List<byte[]>()
             {
-                Crypto.key, Crypto.iv
+                Crypto.iv
             };
 
             string json = JsonSerializer.Serialize(keysList);
 
-            File.WriteAllText(keysFile, json);
-            File.SetAttributes(keysFile, File.GetAttributes(keysFile) | FileAttributes.Hidden);
+            File.WriteAllText(filePathIV, json);
+            File.SetAttributes(filePathIV, File.GetAttributes(filePathIV) | FileAttributes.Hidden);
         }
 
-        public void LoadKeys(string keysFile)
+        public void LoadIV(string filePathIV)
         {
             try
             {
-               string keysJson = File.ReadAllText(keysFile);
+               string ivText = File.ReadAllText(filePathIV);
 
-               if(!string.IsNullOrWhiteSpace(keysJson) || !string.IsNullOrEmpty(keysJson))
+               if(!string.IsNullOrWhiteSpace(ivText) || !string.IsNullOrEmpty(ivText))
                 {
-                    List<byte[]> keysList = JsonSerializer.Deserialize<List<byte[]>>(keysJson);
-                    if (keysList != null)
-                    {
-                        Crypto.key = keysList[0];
-                        Crypto.iv = keysList[1];
-                    }
+                    List<byte[]> list = JsonSerializer.Deserialize<List<byte[]>>(ivText);
+                    if (list != null)
+                        Crypto.iv = list[0];
                 }
             }
             catch

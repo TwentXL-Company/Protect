@@ -1,20 +1,21 @@
-﻿using PasswordManager.Helper;
+﻿using Microsoft.Extensions.DependencyInjection;
+using PasswordManager.Helper;
+using PasswordManager.Helper.Interfaces;
+using PasswordManager.Services;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.IO;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Security.Cryptography;
 using System.Windows.Shapes;
-using PasswordManager.Helper.Interfaces;
-using System.Diagnostics;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace PasswordManager
 {
@@ -25,9 +26,21 @@ namespace PasswordManager
         public AuthenticationWindow(IDataSettings dataSettings)
         {
             InitializeComponent();
+            AuthCodeCheck();
             ErrorMessage.Visibility = Visibility.Collapsed;
 
             _dataSettings = dataSettings;
+        }
+
+        private void AuthCodeCheck()
+        {
+            if (GlobalSettings.hasCrypt)
+                H1_Content.Content = "Enter a secret code";
+            else
+            {
+                H1_Content.Content = "Come up with a secret code";
+                CreateSecretCode_Message.Visibility = Visibility.Visible;
+            }
         }
 
         private void Titlebar_MouseDown(object sender, MouseButtonEventArgs e)
@@ -43,34 +56,52 @@ namespace PasswordManager
         {
             try
             {
-                string code = File.ReadAllText(ASettings.public_filePathAuth);
-
-                using (Aes aes = Aes.Create())
+                if (Code.Text.Length < 4)
                 {
-                    _dataSettings.LoadKeys();
-                    aes.Key = Crypto.key;
-                    aes.IV = Crypto.iv;
+                    ErrorMessage.Visibility = Visibility.Visible;
+                    ErrorMessage.Content = "The length must be at least 4 characters";
+                    return;
+                }
 
-                    string codeDecrypt = Crypto.Decrypt(code, Crypto.key, Crypto.iv);
+                byte[] key = SHA256.HashData(Encoding.UTF8.GetBytes(Code.Text));
+                string result = Convert.ToBase64String(key);
+                Crypto.key = key;
 
-                    if (Code.Text == codeDecrypt)
-                    {
-                        var mainWindow = App.Services?.GetRequiredService<MainWindow>();
-                        mainWindow?.Show();
-                        this.Close();
-                    }
-                    else
-                    {
+                if (GlobalSettings.hasCrypt)
+                {
+                    _dataSettings.LoadIV();
+
+                    bool isValid = Utils.DataDecryptCheck();
+
+                    if (!isValid)
                         ErrorMessage.Visibility = Visibility.Visible;
+                        ErrorMessage.Content = "Wrong code";
                         return;
+                }
+                else
+                {
+                    using (Aes aes = Aes.Create())
+                    {
+                        aes.GenerateIV();
+                        Crypto.iv = aes.IV;
+                        _dataSettings.SaveIV();
                     }
                 }
+
+                MainWindowShow();
             }
             catch(Exception ex)
             {
-                MessageBox.Show("Decrypt error: the decryption keys are missing", "", MessageBoxButton.OK, MessageBoxImage.Error);
-                Debug.Write("Decrypt error: the decryption keys are missing: " + ex.Message);
+                MessageBox.Show("Authentification error", "", MessageBoxButton.OK, MessageBoxImage.Error);
+                Debug.Write("Authentification error: " + ex.Message);
             }
+        }
+
+        private void MainWindowShow()
+        {
+            var mainWindow = App.Services?.GetRequiredService<MainWindow>();
+            mainWindow?.Show();
+            this.Close();
         }
 
         private void DestroyClick(object sender, RoutedEventArgs e)
@@ -78,7 +109,6 @@ namespace PasswordManager
             var message = MessageBox.Show("\"Destroy all\" will lead to a complete cleanup of your data, including your passwords and authorization code. Are you sure you want to continue?", "Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning);
             if(message == MessageBoxResult.Yes)
             {
-                File.Delete(ASettings.public_filePathAuth);
                 _dataSettings.DestroyAll();
                 this.Close();
             }

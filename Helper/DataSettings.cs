@@ -32,16 +32,16 @@ namespace PasswordManager.Helper
         public void SaveJson()
             => _jsonSettings.SaveJson(filePath);
 
-        public void SaveKeys()
-            => _keysSettings.SaveKeys(keysFile);
+        public void SaveIV()
+            => _keysSettings.SaveIV(filePathIV);
 
-        public void LoadKeys() 
-            => _keysSettings.LoadKeys(keysFile);
+        public void LoadIV() 
+            => _keysSettings.LoadIV(filePathIV);
 
         public void DestroyAll()
         {
             File.Delete(filePath);
-            File.Delete(keysFile);
+            File.Delete(filePathIV);
         }
     }
 }

@@ -40,7 +40,6 @@ namespace PasswordManager
             services.AddTransient<Func<DataBlock, DeleteDialog>>(sp => dataBlock =>
                 new DeleteDialog(dataBlock, sp.GetRequiredService<IDataSettings>())
             );
-            services.AddTransient<Modal_AddAuthCode>();
             services.AddTransient<Modal_AddData>();
             services.AddTransient<Func<DataBlock, string, string, string, string, Modal_EditData>>(sp =>
                 (dataBlock, title, login, password, additional) =>
@@ -62,7 +61,8 @@ namespace PasswordManager
 
                 if (_serviceProvider != null)
                 {
-                    Window window = GlobalSettings.isAuth ? _serviceProvider.GetRequiredService<AuthenticationWindow>() : _serviceProvider.GetRequiredService<MainWindow>();
+                    //Window window = GlobalSettings.hasCrypt ? _serviceProvider.GetRequiredService<AuthenticationWindow>() : _serviceProvider.GetRequiredService<MainWindow>();
+                    Window window =  _serviceProvider.GetRequiredService<AuthenticationWindow>();
                     window.Show();
                 }
                 else

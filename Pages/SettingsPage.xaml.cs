@@ -51,19 +51,6 @@ namespace PasswordManager.Pages
             _globalSettings.ApplyTheme(settingsModel.DarkTheme);
         }
 
-        private void AddAuthCode_Click(object sender, RoutedEventArgs e)
-        {
-            Modal_AddAuthCode modalAddAuthCode = App.Services.GetRequiredService<Modal_AddAuthCode>();
-            ModalService.ShowModal(modalAddAuthCode);
-        }
-
-        private void RemoveAuthCode_Click(object sender, RoutedEventArgs e)
-        {
-            File.Delete(ASettings.public_filePathAuth);
-            _globalSettings.LoadSettings();
-            UpdateSettings();
-        }
-
         public void UpdateSettings()
         {
             if (settingsModel.DarkTheme)
@@ -72,20 +59,6 @@ namespace PasswordManager.Pages
                 DarkThemeButton.Content = "On";
 
             BackupPath.Content = settingsModel.BackupPath;
-
-            if(GlobalSettings.isAuth)
-            {
-                AddCodeButton.Visibility = Visibility.Collapsed;
-                RemoveCodeButton.Visibility = AuthenticationCode.Visibility = Visibility.Visible;
-
-                string code = File.ReadAllText(ASettings.public_filePathAuth);
-                AuthenticationCode.Content = code;
-            }
-            else
-            {
-                AddCodeButton.Visibility = Visibility.Visible;
-                RemoveCodeButton.Visibility = AuthenticationCode.Visibility = Visibility.Collapsed;
-            }
         }
     }
 }

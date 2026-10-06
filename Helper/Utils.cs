@@ -1,8 +1,12 @@
-﻿using PasswordManager.Pages;
+﻿using PasswordManager.Components;
+using PasswordManager.Helper.Interfaces;
+using PasswordManager.Models;
+using PasswordManager.Pages;
 using PasswordManager.Services;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
@@ -11,7 +15,7 @@ using System.Windows.Forms;
 
 namespace PasswordManager.Helper
 {
-    public class Utils
+    public class Utils : ASettings
     {
         public static string GenerateRandomText(int min, int max)
         {
@@ -94,6 +98,26 @@ namespace PasswordManager.Helper
             catch (JsonException ex)
             {
                 Debug.WriteLine("Incorrect format: " + ex.Message);
+                return false;
+            }
+        }
+
+        public static bool DataDecryptCheck()
+        {
+            try
+            {
+                string file = File.ReadAllText(filePath);
+
+                if (string.IsNullOrWhiteSpace(file))
+                    return false;
+
+                string json = Crypto.Decrypt(file, Crypto.key, Crypto.iv);
+                JsonDocument.Parse(json);
+
+                return true;
+            }
+            catch
+            {
                 return false;
             }
         }

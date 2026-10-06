@@ -9,13 +9,9 @@ namespace PasswordManager.Helper.Interfaces
     public interface IDataSettings
     {
         public void LoadJson();
-
         public void SaveJson();
-
-        public void SaveKeys();
-
-        public void LoadKeys();
-
+        public void SaveIV();
+        public void LoadIV();
         public void DestroyAll();
     }
 }

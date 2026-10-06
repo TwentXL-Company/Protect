@@ -11,7 +11,7 @@ namespace PasswordManager.Helper.Interfaces
 {
     public interface IKeysSettings
     {
-        public void SaveKeys(string keysFile);
-        public void LoadKeys(string keysFile);
+        public void SaveIV(string filePathIV);
+        public void LoadIV(string filePathIV);
     }
 }

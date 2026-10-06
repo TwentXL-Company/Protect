@@ -18,7 +18,7 @@ namespace PasswordManager.Helper
     public class GlobalSettings : ASettings, IGlobalSettings
     {
         public static SettingsModel settingsModel = new SettingsModel();
-        public static bool isAuth = false;
+        public static bool hasCrypt = false;
 
         public IBackupSettings _backupSettings;
 
@@ -37,10 +37,10 @@ namespace PasswordManager.Helper
             if (!File.Exists(filePathSettings))
                 SaveSettings();
 
-            if (File.Exists(filePathAuth))
-                isAuth = true;
-            else 
-                isAuth = false;
+            if (File.Exists(filePathIV))
+                hasCrypt = true;
+            else
+                hasCrypt = false;
 
             string json = File.ReadAllText(filePathSettings);
             if(json != null)

@@ -27,6 +27,7 @@ namespace PasswordManager.Helper
             try
             {
                 MainPage.MainPageInstance?.DataBlockStackPanel.Children.Clear();
+
                 string directory = Path.GetDirectoryName(filePath)!;
                 Directory.CreateDirectory(directory);
 
@@ -34,23 +35,16 @@ namespace PasswordManager.Helper
                     SaveJson(filePath);
 
                 string file = File.ReadAllText(filePath);
+
                 if (!string.IsNullOrEmpty(file) || !string.IsNullOrWhiteSpace(file))
                 {
-                    _keysSettings.LoadKeys(keysFile);
-                    file = Crypto.Decrypt(file, Crypto.key, Crypto.iv);
+                    _keysSettings.LoadIV(filePathIV);
 
+                    file = Crypto.Decrypt(file, Crypto.key, Crypto.iv);
                     List<PasswordModel> passwordList = JsonSerializer.Deserialize<List<PasswordModel>>(file);
 
-                    if(passwordList != null && passwordList.Count > 0)
-                    {
-                        foreach (var item in passwordList)
-                        {
-                            DataBlock dataBlock = new DataBlock(item.Title, item.Login, item.Password, item.Additional, item.CreatedDate);
-                            MainPage.MainPageInstance?.DataBlockStackPanel.Children.Add(dataBlock);
-                        }
-
-                        Utils.PasswordsListCheck();
-                    }
+                    if (passwordList != null && passwordList.Count > 0)
+                        FillPasswordList(passwordList);
                 }
             }
             catch (Exception ex)
@@ -103,7 +97,7 @@ namespace PasswordManager.Helper
                         Crypto.key = aes.Key;
                         Crypto.iv = aes.IV;
 
-                        _keysSettings.SaveKeys(keysFile);
+                        _keysSettings.SaveIV(filePathIV);
                     }
                     else
                     {
@@ -120,6 +114,17 @@ namespace PasswordManager.Helper
                 Debug.WriteLine("JSON credentials save error: " + ex.Message);
                 MessageBox.Show("JSON credentials save error", "", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+        }
+
+        private void FillPasswordList(List<PasswordModel> passwordList)
+        {
+            foreach (var item in passwordList)
+            {
+                DataBlock dataBlock = new DataBlock(item.Title, item.Login, item.Password, item.Additional, item.CreatedDate);
+                MainPage.MainPageInstance?.DataBlockStackPanel.Children.Add(dataBlock);
+            }
+
+            Utils.PasswordsListCheck();
         }
     }
 }
