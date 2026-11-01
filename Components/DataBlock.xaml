@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:svgc="http://sharpvectors.codeplex.com/svgc/" 
              xmlns:local="clr-namespace:PasswordManager.Components"
-             mc:Ignorable="d" d:DesignWidth="800" Height="50" Margin="0,0,0,10">
+             mc:Ignorable="d" d:DesignWidth="800" Height="58" Margin="0,0,0,8">
     <Button Style="{DynamicResource DataBlock_Block}" Click="DataBlock_Click">
         <Button.ContextMenu>
             <ContextMenu>

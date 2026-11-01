@@ -10,7 +10,7 @@
              d:Background="White">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="120" />
+            <RowDefinition Height="132" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
@@ -45,11 +45,11 @@
 
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="250" />
+                <ColumnDefinition Width="290" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <Border Grid.Column="0" Padding="10" BorderThickness="1" CornerRadius="10" BorderBrush="{DynamicResource BorderColor}">
+            <Border Grid.Column="0" Padding="14" Background="{DynamicResource SurfaceColor}" BorderThickness="1" CornerRadius="12" BorderBrush="{DynamicResource BorderColor}">
                 <Grid>
                     <Label x:Name="EmptyPasswords_Message" Content="You don't have any passwords" HorizontalAlignment="Center" Margin="10" />
                     <ScrollViewer VerticalScrollBarVisibility="Auto">
@@ -59,7 +59,7 @@
                 </Grid>
             </Border>
 
-            <Border Grid.Column="1" BorderThickness="1" CornerRadius="10" BorderBrush="{DynamicResource BorderColor}" Margin="10,0,0,0">
+            <Border Grid.Column="1" Background="{DynamicResource SurfaceColor}" BorderThickness="1" CornerRadius="12" BorderBrush="{DynamicResource BorderColor}" Margin="12,0,0,0">
                 <Grid>
                     <Grid x:Name="DataBlockContentPanel" Margin="20,10" />
                     <Label x:Name="SelectPassword_Message" Content="Select to view the information" HorizontalAlignment="Center" VerticalAlignment="Center" />
