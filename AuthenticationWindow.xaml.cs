@@ -74,9 +74,11 @@ namespace PasswordManager
                     bool isValid = Utils.DataDecryptCheck();
 
                     if (!isValid)
+                    {
                         ErrorMessage.Visibility = Visibility.Visible;
                         ErrorMessage.Content = "Wrong code";
                         return;
+                    }
                 }
                 else
                 {

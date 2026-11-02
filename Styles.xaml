@@ -342,14 +342,17 @@
     <!--DataBlock-->
     <Style x:Key="DataBlock_Block" TargetType="Button">
         <Setter Property="Background" Value="{StaticResource DataBlockColor}" />
+        <Setter Property="BorderBrush" Value="{StaticResource BorderColor}" />
         <Setter Property="Cursor" Value="Hand" />
-        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="BorderThickness" Value="1" />
         <Setter Property="Padding" Value="10,6" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
                         <Border x:Name="border"
                         Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
                         CornerRadius="10"
                         Padding="{TemplateBinding Padding}">
                         <ContentPresenter HorizontalAlignment="Left"
