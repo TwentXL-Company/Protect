@@ -56,14 +56,14 @@ namespace PasswordManager
         {
             try
             {
-                if (Code.Text.Length < 4)
+                if (Code.Password.Length < 4)
                 {
                     ErrorMessage.Visibility = Visibility.Visible;
                     ErrorMessage.Content = "The length must be at least 4 characters";
                     return;
                 }
 
-                byte[] key = SHA256.HashData(Encoding.UTF8.GetBytes(Code.Text));
+                byte[] key = SHA256.HashData(Encoding.UTF8.GetBytes(Code.Password));
                 string result = Convert.ToBase64String(key);
                 Crypto.key = key;
 

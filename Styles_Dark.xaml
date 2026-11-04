@@ -389,6 +389,41 @@
         <Setter Property="VerticalAlignment" Value="Center" />
     </Style>
 
+    <Style x:Key="SecretCodeBox" TargetType="PasswordBox">
+        <Setter Property="Background" Value="{StaticResource SurfaceColor}" />
+        <Setter Property="BorderBrush" Value="{StaticResource TextBoxPlaceholder}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Padding" Value="13,0,13,0" />
+        <Setter Property="Foreground" Value="{StaticResource TextColor}" />
+        <Setter Property="FontSize" Value="{StaticResource FontSize}" />
+        <Setter Property="FontFamily" Value="Segoe UI" />
+        <Setter Property="Cursor" Value="IBeam" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="PasswordBox">
+                    <Border x:Name="border"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="10"
+                            Padding="{TemplateBinding Padding}">
+                        <ScrollViewer x:Name="PART_ContentHost"
+                                      VerticalAlignment="Center"
+                                      HorizontalAlignment="Left" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsFocused" Value="True">
+                            <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource AccentColor}" />
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource TextColorAdditional}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <!--DataBlockContent-->
     <Style x:Key="DataBlockContent_Block" TargetType="Grid">
         <Setter Property="Margin" Value="0,0,0,20" />
